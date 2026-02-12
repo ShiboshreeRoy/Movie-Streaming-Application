@@ -33,15 +33,27 @@
 <!-- TV Shows Grid -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
   <% @tv_shows.each do |tv_show| %>
-    <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+    <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105 group relative">
       <%= link_to tv_show_path(tv_show) do %>
-        <% if tv_show.display_poster_url %>
-          <%= image_tag tv_show.display_poster_url, class: "w-full h-64 object-cover", alt: tv_show.title %>
-        <% else %>
-          <div class="bg-gray-700 w-full h-64 flex items-center justify-center">
-            <span class="text-gray-400">No Image</span>
+        <div class="relative">
+          <% if tv_show.display_poster_url %>
+            <%= image_tag tv_show.display_poster_url, class: "w-full h-64 object-cover transition-transform group-hover:scale-110", alt: tv_show.title %>
+          <% else %>
+            <div class="bg-gray-700 w-full h-64 flex items-center justify-center">
+              <span class="text-gray-400">No Image</span>
+            </div>
+          <% end %>
+          
+          <!-- Play Button Overlay -->
+          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+              </svg>
+            </div>
           </div>
-        <% end %>
+        </div>
+        
         <div class="p-3">
           <h3 class="font-semibold truncate"><%= tv_show.title %></h3>
           <div class="flex justify-between text-sm text-gray-400 mt-1">
