@@ -34,10 +34,12 @@ class WebSeriesController < ApplicationController
       session[:viewed_web_series] << @web_series.id
     end
     
-    # Get active ads for this web series
-    @pre_roll_ads = @web_series.ads.where(position: 'pre').where(active: true)
-    @mid_roll_ads = @web_series.ads.where(position: 'mid').where(active: true)
-    @post_roll_ads = @web_series.ads.where(position: 'post').where(active: true)
+    # Get active ads for this web series if watching
+    if params[:watch]
+      @pre_roll_ads = @web_series.ads.where(position: 'pre').where(active: true)
+      @mid_roll_ads = @web_series.ads.where(position: 'mid').where(active: true)
+      @post_roll_ads = @web_series.ads.where(position: 'post').where(active: true)
+    end
   end
   
   def download

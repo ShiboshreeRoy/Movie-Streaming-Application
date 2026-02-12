@@ -41,15 +41,21 @@ class MoviesController < ApplicationController
     # Handle watch parameter for streaming
     if params[:watch] == 'true'
       if @movie.display_video_url
-        # Could redirect to a dedicated player page or modal
         # For now, we'll just highlight the streaming option
       end
     end
     
-    # Get active ads for this movie
-    @pre_roll_ads = @movie.ads.where(position: 'pre').where(active: true)
-    @mid_roll_ads = @movie.ads.where(position: 'mid').where(active: true)
-    @post_roll_ads = @movie.ads.where(position: 'post').where(active: true)
+    # Get active ads for this movie if watching
+    if params[:watch] == 'true'
+      @pre_roll_ads = @movie.ads.where(position: 'pre').where(active: true)
+      @mid_roll_ads = @movie.ads.where(position: 'mid').where(active: true)
+      @post_roll_ads = @movie.ads.where(position: 'post').where(active: true)
+    else
+      # Get active ads for this movie (non-streaming view)
+      @pre_roll_ads = @movie.ads.where(position: 'pre').where(active: true)
+      @mid_roll_ads = @movie.ads.where(position: 'mid').where(active: true)
+      @post_roll_ads = @movie.ads.where(position: 'post').where(active: true)
+    end
   end
   
   def download
