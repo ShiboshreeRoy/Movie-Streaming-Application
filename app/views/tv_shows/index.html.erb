@@ -1,0 +1,72 @@
+<!-- Page Title -->
+<div class="mb-8">
+  <h1 class="text-3xl font-bold">TV Shows</h1>
+  <p class="text-gray-400">Browse our collection of TV shows</p>
+</div>
+
+<!-- Filters -->
+<div class="bg-gray-800 p-4 rounded-lg mb-8">
+  <%= form_with url: tv_shows_path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-4 gap-4" do |form| %>
+    <div>
+      <%= form.label :genre_id, "Genre", class: "block text-sm font-medium mb-1" %>
+      <%= form.select :genre_id, options_from_collection_for_select(@genres, "id", "name", params[:genre_id]), { include_blank: "All Genres" }, { class: "w-full bg-gray-700 text-white rounded px-3 py-2" } %>
+    </div>
+    
+    <div>
+      <%= form.label :year, "Year", class: "block text-sm font-medium mb-1" %>
+      <%= form.number_field :year, value: params[:year], placeholder: "Year", class: "w-full bg-gray-700 text-white rounded px-3 py-2" %>
+    </div>
+    
+    <div>
+      <%= form.label :min_rating, "Min Rating", class: "block text-sm font-medium mb-1" %>
+      <%= form.number_field :min_rating, value: params[:min_rating], step: 0.1, min: 0, max: 10, placeholder: "Min Rating", class: "w-full bg-gray-700 text-white rounded px-3 py-2" %>
+    </div>
+    
+    <div>
+      <%= form.label :search, "Search", class: "block text-sm font-medium mb-1" %>
+      <%= form.text_field :search, value: params[:search], placeholder: "Search TV shows...", class: "w-full bg-gray-700 text-white rounded px-3 py-2" %>
+      <%= form.submit "Apply Filters", class: "w-full mt-6 bg-red-600 hover:bg-red-700 text-white py-2 rounded cursor-pointer" %>
+    </div>
+  <% end %>
+</div>
+
+<!-- TV Shows Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+  <% @tv_shows.each do |tv_show| %>
+    <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+      <%= link_to tv_show_path(tv_show) do %>
+        <% if tv_show.display_poster_url %>
+          <%= image_tag tv_show.display_poster_url, class: "w-full h-64 object-cover", alt: tv_show.title %>
+        <% else %>
+          <div class="bg-gray-700 w-full h-64 flex items-center justify-center">
+            <span class="text-gray-400">No Image</span>
+          </div>
+        <% end %>
+        <div class="p-3">
+          <h3 class="font-semibold truncate"><%= tv_show.title %></h3>
+          <div class="flex justify-between text-sm text-gray-400 mt-1">
+            <span><%= tv_show.release_year %></span>
+            <span>⭐ <%= tv_show.imdb_rating || 'N/A' %></span>
+          </div>
+          <div class="mt-2 text-xs text-gray-500 truncate">
+            <%= tv_show.genre&.name %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Pagination -->
+<% if @tv_shows.respond_to?(:current_page) %>
+  <div class="mt-8 flex justify-center">
+    <%= paginate @tv_shows %>
+  </div>
+<% end %>
+
+<% unless @tv_shows.any? %>
+  <div class="text-center py-12">
+    <h3 class="text-xl text-gray-400">No TV shows found</h3>
+    <p class="text-gray-500 mt-2">Try adjusting your filters</p>
+  </div>
+<% end %>

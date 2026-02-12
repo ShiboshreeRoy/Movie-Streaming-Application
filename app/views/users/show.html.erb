@@ -1,0 +1,71 @@
+<div class="bg-gray-800 rounded-lg p-6">
+  <div class="flex flex-col md:flex-row items-start">
+    <div class="md:w-1/4 mb-6 md:mb-0 md:pr-6">
+      <div class="bg-gray-700 rounded-full w-32 h-32 flex items-center justify-center mx-auto">
+        <span class="text-4xl text-gray-400">👤</span>
+      </div>
+    </div>
+    
+    <div class="md:w-3/4">
+      <h1 class="text-3xl font-bold mb-2"><%= @user.full_name.present? ? @user.full_name : @user.email.split('@').first.humanize %></h1>
+      <p class="text-gray-400 mb-4"><%= @user.email %></p>
+      
+      <div class="flex gap-4 mb-6">
+        <%= link_to "Edit Profile", edit_user_path(@user), class: "bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded" %>
+        <% if @user.admin? %>
+          <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm">Admin</span>
+        <% else %>
+          <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">Member</span>
+        <% end %>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-700 p-4 rounded-lg">
+          <h2 class="text-xl font-semibold mb-4">My Favorites (<%= @favorite_movies.count %>)</h2>
+          <% if @favorite_movies.any? %>
+            <div class="space-y-3">
+              <% @favorite_movies.first(5).each do |movie| %>
+                <div class="flex items-center">
+                  <% if movie.poster_url %>
+                    <%= image_tag movie.poster_url, class: "w-12 h-12 object-cover rounded mr-3", alt: movie.title %>
+                  <% else %>
+                    <div class="w-12 h-12 bg-gray-600 rounded mr-3 flex items-center justify-center">
+                      <span class="text-gray-400 text-xs">No Image</span>
+                    </div>
+                  <% end %>
+                  <%= link_to movie.title, movie_path(movie), class: "hover:text-red-400" %>
+                </div>
+              <% end %>
+              <% if @favorite_movies.count > 5 %>
+                <%= link_to "View All (#{@favorite_movies.count})", "#", class: "text-red-500 hover:text-red-400 text-sm" %>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-gray-400">No favorites yet</p>
+          <% end %>
+        </div>
+        
+        <div class="bg-gray-700 p-4 rounded-lg">
+          <h2 class="text-xl font-semibold mb-4">My Ratings (<%= @rated_movies.count %>)</h2>
+          <% if @rated_movies.any? %>
+            <div class="space-y-3">
+              <% @rated_movies.first(5).each do |movie| %>
+                <div class="flex items-center justify-between">
+                  <%= link_to movie.title, movie_path(movie), class: "hover:text-red-400" %>
+                  <span class="text-yellow-400">
+                    <%= @user.user_movie_ratings.find_by(movie: movie)&.rating || 0 %>/10
+                  </span>
+                </div>
+              <% end %>
+              <% if @rated_movies.count > 5 %>
+                <%= link_to "View All (#{@rated_movies.count})", "#", class: "text-red-500 hover:text-red-400 text-sm" %>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-gray-400">No ratings yet</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

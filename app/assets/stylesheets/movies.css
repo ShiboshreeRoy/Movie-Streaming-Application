@@ -1,0 +1,110 @@
+/* Professional Movie Page Enhancements */
+
+.movie-hero-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+}
+
+.rating-stars {
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.watch-button {
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.watch-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #ef4444, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.badge-glow {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.section-divider {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Enhanced Card Styles */
+.professional-card {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.professional-card:hover {
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Rating Input Enhancement */
+.rating-input {
+  background: linear-gradient(45deg, #374151, #1f2937);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.rating-input:focus {
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+}
+
+/* Button Gradients */
+.btn-gradient-primary {
+  background: linear-gradient(45deg, #ef4444, #f97316);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-primary:hover {
+  background: linear-gradient(45deg, #dc2626, #ea580c);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+}
+
+.btn-gradient-secondary {
+  background: linear-gradient(45deg, #3b82f6, #60a5fa);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-secondary:hover {
+  background: linear-gradient(45deg, #2563eb, #3b82f6);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+}

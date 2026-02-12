@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  genre: MyString
+  seasons: 1
+  episodes: 1
+  imdb_rating: 9.99
+  poster_url: MyString
+  trailer_url: MyString
+  country: MyString
+
+two:
+  title: MyString
+  description: MyText
+  genre: MyString
+  seasons: 1
+  episodes: 1
+  imdb_rating: 9.99
+  poster_url: MyString
+  trailer_url: MyString
+  country: MyString

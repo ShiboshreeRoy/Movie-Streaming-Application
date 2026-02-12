@@ -1,0 +1,176 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to "← Back to Movies", admin_movies_path,
+        class: "text-red-500 hover:text-red-400 inline-flex items-center" %>
+  </div>
+
+  <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+
+    <!-- Movie Header -->
+    <div class="p-6 border-b border-gray-700">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-white"><%= @movie.title %></h1>
+
+          <div class="flex items-center mt-2 space-x-4">
+            <span class="text-gray-400"><%= @movie.release_year %></span>
+            <span class="text-yellow-400">⭐ <%= @movie.imdb_rating || 'N/A' %></span>
+            <span class="text-gray-400"><%= @movie.duration %> min</span>
+
+            <% if @movie.genre %>
+              <span class="bg-red-600 text-white px-2 py-1 rounded text-sm">
+                <%= @movie.genre.name %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="flex space-x-2">
+          <%= link_to "Edit", edit_admin_movie_path(@movie),
+              class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md" %>
+
+          <%= link_to "Delete", admin_movie_path(@movie),
+              data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+              class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movie Content -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Poster Section -->
+        <div class="lg:col-span-1">
+          <div class="bg-gray-700 rounded-lg overflow-hidden">
+
+            <% if @movie.thumbnail.attached? %>
+              <%= image_tag @movie.thumbnail,
+                  class: "w-full h-96 object-cover",
+                  alt: @movie.title %>
+            <% elsif @movie.poster_url.present? %>
+              <%= image_tag @movie.poster_url,
+                  class: "w-full h-96 object-cover",
+                  alt: @movie.title %>
+            <% else %>
+              <div class="w-full h-96 flex items-center justify-center bg-gray-600">
+                <span class="text-gray-400">No Image Available</span>
+              </div>
+            <% end %>
+
+          </div>
+
+          <!-- Thumbnail Info -->
+          <% if @movie.thumbnail.attached? %>
+            <div class="mt-4 p-3 bg-gray-700 rounded-lg">
+              <p class="text-sm text-green-400">✓ Custom thumbnail uploaded</p>
+              <p class="text-xs text-gray-400 mt-1">
+                File: <%= @movie.thumbnail.filename %><br>
+                Size: <%= number_to_human_size(@movie.thumbnail.byte_size) %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Details Section -->
+        <div class="lg:col-span-2">
+
+          <!-- Description -->
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold text-white mb-3">Description</h2>
+            <p class="text-gray-300 leading-relaxed">
+              <%= @movie.description.presence || "No description available." %>
+            </p>
+          </div>
+
+          <!-- Metadata -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+            <div>
+              <h3 class="text-lg font-medium text-white mb-2">Details</h3>
+              <dl class="space-y-2">
+                <div>
+                  <dt class="text-sm text-gray-400">Release Year</dt>
+                  <dd class="text-white"><%= @movie.release_year %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm text-gray-400">Duration</dt>
+                  <dd class="text-white"><%= @movie.duration %> minutes</dd>
+                </div>
+                <div>
+                  <dt class="text-sm text-gray-400">IMDb Rating</dt>
+                  <dd class="text-white"><%= @movie.imdb_rating || 'Not rated' %></dd>
+                </div>
+                <% if @movie.genre %>
+                  <div>
+                    <dt class="text-sm text-gray-400">Genre</dt>
+                    <dd class="text-white"><%= @movie.genre.name %></dd>
+                  </div>
+                <% end %>
+              </dl>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-medium text-white mb-2">Media Links</h3>
+              <dl class="space-y-2">
+                <div>
+                  <dt class="text-sm text-gray-400">Poster URL</dt>
+                  <dd class="text-white break-all">
+                    <%= @movie.poster_url.presence || "Not provided" %>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-sm text-gray-400">Trailer URL</dt>
+                  <dd class="text-white break-all">
+                    <%= @movie.trailer_url.presence || "Not provided" %>
+                  </dd>
+                </div>
+              </dl>
+
+              <% if @movie.video.attached? %>
+                <div class="mt-4 p-3 bg-gray-700 rounded-lg">
+                  <p class="text-sm text-green-400">✓ Custom video uploaded</p>
+                  <p class="text-xs text-gray-400 mt-1">
+                    File: <%= @movie.video.filename %><br>
+                    Size: <%= number_to_human_size(@movie.video.byte_size) %>
+                  </p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Video Preview -->
+          <% if @movie.video.attached? %>
+            <div class="mb-6">
+              <h3 class="text-lg font-medium text-white mb-3">Preview</h3>
+              <div class="bg-black rounded-lg overflow-hidden">
+                <%= video_tag @movie.display_video_url,
+                    controls: true,
+                    class: "w-full",
+                    preload: "metadata" %>
+              </div>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 bg-gray-700 border-t border-gray-600 flex justify-between items-center">
+      <div class="text-sm text-gray-400">
+        Created: <%= @movie.created_at.strftime("%B %d, %Y") %><br>
+        Last updated: <%= @movie.updated_at.strftime("%B %d, %Y") %>
+      </div>
+
+      <div class="flex space-x-3">
+        <%= link_to "View Public Page", movie_path(@movie),
+            class: "text-gray-300 hover:text-white border border-gray-600 px-4 py-2 rounded-md" %>
+
+        <%= link_to "Edit Movie", edit_admin_movie_path(@movie),
+            class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md" %>
+      </div>
+    </div>
+
+  </div>
+</div>

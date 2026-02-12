@@ -1,0 +1,129 @@
+<!-- Hero Section -->
+<div class="relative bg-gradient-to-r from-gray-900 to-black py-20 mb-12">
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl md:text-6xl font-bold mb-4">Latest Movies & TV Shows</h1>
+    <p class="text-xl text-gray-300 mb-8">Stream thousands of movies and TV shows for free</p>
+    <%= link_to "Browse Movies", movies_path, class: "bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg mr-4" %>
+    <%= link_to "Browse TV Shows", tv_shows_path, class: "bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg" %>
+  </div>
+</div>
+
+<!-- Featured Movies -->
+<section class="mb-12">
+  <h2 class="text-2xl font-bold mb-6 text-white">Featured Movies</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <% @featured_movies.each do |movie| %>
+      <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+        <%= link_to movie_path(movie) do %>
+          <% if movie.display_poster_url %>
+            <%= image_tag movie.display_poster_url, class: "w-full h-48 object-cover", alt: movie.title %>
+          <% else %>
+            <div class="bg-gray-700 w-full h-48 flex items-center justify-center">
+              <span class="text-gray-400">No Image</span>
+            </div>
+          <% end %>
+          <div class="p-3">
+            <h3 class="font-semibold truncate"><%= movie.title %></h3>
+            <div class="flex justify-between text-sm text-gray-400">
+              <span><%= movie.release_year %></span>
+              <span>⭐ <%= movie.imdb_rating || 'N/A' %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <%= link_to "View All Movies", movies_path, class: "text-red-500 hover:text-red-400 mt-4 inline-block" %>
+</section>
+
+<!-- Latest Movies -->
+<section class="mb-12">
+  <h2 class="text-2xl font-bold mb-6 text-white">Latest Movies</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <% @latest_movies.each do |movie| %>
+      <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+        <%= link_to movie_path(movie) do %>
+          <% if movie.display_poster_url %>
+            <%= image_tag movie.display_poster_url, class: "w-full h-48 object-cover", alt: movie.title %>
+          <% else %>
+            <div class="bg-gray-700 w-full h-48 flex items-center justify-center">
+              <span class="text-gray-400">No Image</span>
+            </div>
+          <% end %>
+          <div class="p-3">
+            <h3 class="font-semibold truncate"><%= movie.title %></h3>
+            <div class="flex justify-between text-sm text-gray-400">
+              <span><%= movie.release_year %></span>
+              <span>⭐ <%= movie.imdb_rating || 'N/A' %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<!-- Top Rated Movies -->
+<section class="mb-12">
+  <h2 class="text-2xl font-bold mb-6 text-white">Top Rated Movies</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <% @top_rated_movies.each do |movie| %>
+      <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+        <%= link_to movie_path(movie) do %>
+          <% if movie.display_poster_url %>
+            <%= image_tag movie.display_poster_url, class: "w-full h-48 object-cover", alt: movie.title %>
+          <% else %>
+            <div class="bg-gray-700 w-full h-48 flex items-center justify-center">
+              <span class="text-gray-400">No Image</span>
+            </div>
+          <% end %>
+          <div class="p-3">
+            <h3 class="font-semibold truncate"><%= movie.title %></h3>
+            <div class="flex justify-between text-sm text-gray-400">
+              <span><%= movie.release_year %></span>
+              <span>⭐ <%= movie.imdb_rating || 'N/A' %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<!-- Featured TV Shows -->
+<section class="mb-12">
+  <h2 class="text-2xl font-bold mb-6 text-white">Featured TV Shows</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <% @featured_tv_shows.each do |tv_show| %>
+      <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+        <%= link_to tv_show_path(tv_show) do %>
+          <% if tv_show.poster_url %>
+            <%= image_tag tv_show.poster_url, class: "w-full h-48 object-cover", alt: tv_show.title %>
+          <% else %>
+            <div class="bg-gray-700 w-full h-48 flex items-center justify-center">
+              <span class="text-gray-400">No Image</span>
+            </div>
+          <% end %>
+          <div class="p-3">
+            <h3 class="font-semibold truncate"><%= tv_show.title %></h3>
+            <div class="flex justify-between text-sm text-gray-400">
+              <span><%= tv_show.release_year %></span>
+              <span>⭐ <%= tv_show.imdb_rating || 'N/A' %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <%= link_to "View All TV Shows", tv_shows_path, class: "text-red-500 hover:text-red-400 mt-4 inline-block" %>
+</section>
+
+<!-- Genres -->
+<section class="mb-12">
+  <h2 class="text-2xl font-bold mb-6 text-white">Browse by Genre</h2>
+  <div class="flex flex-wrap gap-3">
+    <% @genres.each do |genre| %>
+      <%= link_to genre.name, genre_path(genre), class: "bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg" %>
+    <% end %>
+  </div>
+</section>

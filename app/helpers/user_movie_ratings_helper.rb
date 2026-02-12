@@ -1,0 +1,2 @@
+module UserMovieRatingsHelper
+end

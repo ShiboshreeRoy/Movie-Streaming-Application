@@ -1,0 +1,121 @@
+<div class="bg-gray-800 rounded-lg p-6 max-w-4xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6">Edit Movie</h1>
+  
+  <%= form_with model: [:admin, @movie], local: true, multipart: true, class: "space-y-6" do |form| %>
+    <% if @movie.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <h3 class="font-bold"><%= pluralize(@movie.errors.count, "error") %> prohibited this movie from being saved:</h3>
+        <ul class="list-disc pl-5 mt-2">
+          <% @movie.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= form.label :title, class: "block text-sm font-medium mb-2" %>
+        <%= form.text_field :title, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :genre_id, "Genre", class: "block text-sm font-medium mb-2" %>
+        <%= form.select :genre_id, options_from_collection_for_select(@genres, "id", "name", @movie.genre_id), { include_blank: "Select Genre" }, { class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" } %>
+      </div>
+      
+      <div>
+        <%= form.label :release_year, "Release Year", class: "block text-sm font-medium mb-2" %>
+        <%= form.number_field :release_year, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :duration, "Duration (minutes)", class: "block text-sm font-medium mb-2" %>
+        <%= form.number_field :duration, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :imdb_rating, "IMDb Rating", class: "block text-sm font-medium mb-2" %>
+        <%= form.number_field :imdb_rating, step: 0.1, min: 0, max: 10, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :country, class: "block text-sm font-medium mb-2" %>
+        <%= form.text_field :country, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :director, class: "block text-sm font-medium mb-2" %>
+        <%= form.text_field :director, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :cast, class: "block text-sm font-medium mb-2" %>
+        <%= form.text_area :cast, rows: 3, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+    </div>
+    
+    <div>
+      <%= form.label :description, class: "block text-sm font-medium mb-2" %>
+      <%= form.text_area :description, rows: 4, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= form.label :thumbnail, "Movie Thumbnail", class: "block text-sm font-medium mb-2" %>
+        <% if @movie.thumbnail.attached? %>
+          <div class="mb-2">
+            <%= image_tag @movie.display_poster_url, class: "w-32 h-48 object-cover rounded" %>
+            <p class="text-sm text-green-400 mt-1">Current thumbnail uploaded</p>
+          </div>
+        <% end %>
+        <%= form.file_field :thumbnail, accept: 'image/*', class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+        <p class="text-sm text-gray-400 mt-1">Upload a new poster image (PNG, JPG, JPEG - Max 5MB)</p>
+        <% if @movie.thumbnail.attached? %>
+          <p class="text-sm text-yellow-400 mt-1">Leave blank to keep current thumbnail</p>
+        <% end %>
+      </div>
+      
+      <div>
+        <%= form.label :video, "Movie Video", class: "block text-sm font-medium mb-2" %>
+        <% if @movie.video.attached? %>
+          <div class="mb-2">
+            <p class="text-sm text-green-400">Current video uploaded (<%= number_to_human_size(@movie.video.blob.byte_size) %>)</p>
+            <% if @movie.display_video_url %>
+              <div class="mt-2">
+                <video controls class="w-full max-w-xs" preload="metadata">
+                  <source src="<%= @movie.display_video_url %>" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        <%= form.file_field :video, accept: 'video/*', class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+        <p class="text-sm text-gray-400 mt-1">Upload a new movie file (MP4, AVI, MOV - Max 100MB)</p>
+        <% if @movie.video.attached? %>
+          <p class="text-sm text-yellow-400 mt-1">Leave blank to keep current video</p>
+        <% end %>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= form.label :poster_url, "Poster URL (fallback)", class: "block text-sm font-medium mb-2" %>
+        <%= form.url_field :poster_url, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+        <p class="text-sm text-gray-400 mt-1">External URL for poster image (used if no thumbnail uploaded)</p>
+      </div>
+      
+      <div>
+        <%= form.label :trailer_url, "Trailer URL (fallback)", class: "block text-sm font-medium mb-2" %>
+        <%= form.url_field :trailer_url, class: "w-full bg-gray-700 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+        <p class="text-sm text-gray-400 mt-1">External URL for trailer/video (used if no video uploaded)</p>
+      </div>
+    </div>
+    
+    <div class="flex justify-end space-x-4 pt-4">
+      <%= link_to "Cancel", admin_movies_path, class: "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded" %>
+      <%= form.submit "Update Movie", class: "bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded" %>
+    </div>
+  <% end %>
+</div>

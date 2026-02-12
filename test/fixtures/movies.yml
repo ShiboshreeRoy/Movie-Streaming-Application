@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  genre: MyString
+  duration: 1
+  release_year: 1
+  imdb_rating: 9.99
+  poster_url: MyString
+  trailer_url: MyString
+  country: MyString
+  director: MyString
+  cast: MyText
+
+two:
+  title: MyString
+  description: MyText
+  genre: MyString
+  duration: 1
+  release_year: 1
+  imdb_rating: 9.99
+  poster_url: MyString
+  trailer_url: MyString
+  country: MyString
+  director: MyString
+  cast: MyText

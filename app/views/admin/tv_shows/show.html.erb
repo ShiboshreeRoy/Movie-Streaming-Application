@@ -1,0 +1,184 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to "← Back to TV Shows", admin_tv_shows_path,
+        class: "text-red-500 hover:text-red-400 inline-flex items-center" %>
+  </div>
+
+  <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+
+    <!-- TV Show Header -->
+    <div class="p-6 border-b border-gray-700">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-white"><%= @tv_show.title %></h1>
+
+          <div class="flex items-center mt-2 space-x-4">
+            <span class="text-gray-400"><%= @tv_show.release_year %></span>
+            <span class="text-yellow-400">⭐ <%= @tv_show.imdb_rating || 'N/A' %></span>
+            <span class="text-gray-400"><%= @tv_show.seasons %> seasons, <%= @tv_show.episodes %> episodes</span>
+
+            <% if @tv_show.genre %>
+              <span class="bg-red-600 text-white px-2 py-1 rounded text-sm">
+                <%= @tv_show.genre.name %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="flex space-x-2">
+          <%= link_to "Edit", edit_admin_tv_show_path(@tv_show),
+              class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md" %>
+
+          <%= link_to "Delete", admin_tv_show_path(@tv_show),
+              data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+              class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- TV Show Content -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Poster Section -->
+        <div class="lg:col-span-1">
+          <div class="bg-gray-700 rounded-lg overflow-hidden">
+
+            <% if @tv_show.thumbnail.attached? %>
+              <%= image_tag @tv_show.thumbnail,
+                  class: "w-full h-96 object-cover",
+                  alt: @tv_show.title %>
+            <% elsif @tv_show.poster_url.present? %>
+              <%= image_tag @tv_show.poster_url,
+                  class: "w-full h-96 object-cover",
+                  alt: @tv_show.title %>
+            <% else %>
+              <div class="w-full h-96 flex items-center justify-center bg-gray-600">
+                <span class="text-gray-400">No Image Available</span>
+              </div>
+            <% end %>
+
+          </div>
+
+          <!-- Thumbnail Info -->
+          <% if @tv_show.thumbnail.attached? %>
+            <div class="mt-4 p-3 bg-gray-700 rounded-lg">
+              <p class="text-sm text-green-400">✓ Custom thumbnail uploaded</p>
+              <p class="text-xs text-gray-400 mt-1">
+                File: <%= @tv_show.thumbnail.filename %><br>
+                Size: <%= number_to_human_size(@tv_show.thumbnail.byte_size) %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Details Section -->
+        <div class="lg:col-span-2">
+
+          <!-- Description -->
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold text-white mb-3">Description</h2>
+            <p class="text-gray-300 leading-relaxed">
+              <%= @tv_show.description.presence || "No description available." %>
+            </p>
+          </div>
+
+          <!-- Metadata -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+            <div>
+              <h3 class="text-lg font-medium text-white mb-2">Details</h3>
+              <dl class="space-y-2">
+                <div>
+                  <dt class="text-sm text-gray-400">Release Year</dt>
+                  <dd class="text-white"><%= @tv_show.release_year %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm text-gray-400">Seasons</dt>
+                  <dd class="text-white"><%= @tv_show.seasons %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm text-gray-400">Episodes</dt>
+                  <dd class="text-white"><%= @tv_show.episodes %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm text-gray-400">IMDb Rating</dt>
+                  <dd class="text-white"><%= @tv_show.imdb_rating || 'Not rated' %></dd>
+                </div>
+                <div>
+                  <dt class="text-sm text-gray-400">Country</dt>
+                  <dd class="text-white"><%= @tv_show.country || 'Not specified' %></dd>
+                </div>
+                <% if @tv_show.genre %>
+                  <div>
+                    <dt class="text-sm text-gray-400">Genre</dt>
+                    <dd class="text-white"><%= @tv_show.genre.name %></dd>
+                  </div>
+                <% end %>
+              </dl>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-medium text-white mb-2">Media Links</h3>
+              <dl class="space-y-2">
+                <div>
+                  <dt class="text-sm text-gray-400">Poster URL</dt>
+                  <dd class="text-white break-all">
+                    <%= @tv_show.poster_url.presence || "Not provided" %>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-sm text-gray-400">Trailer URL</dt>
+                  <dd class="text-white break-all">
+                    <%= @tv_show.trailer_url.presence || "Not provided" %>
+                  </dd>
+                </div>
+              </dl>
+
+              <% if @tv_show.video.attached? %>
+                <div class="mt-4 p-3 bg-gray-700 rounded-lg">
+                  <p class="text-sm text-green-400">✓ Custom video uploaded</p>
+                  <p class="text-xs text-gray-400 mt-1">
+                    File: <%= @tv_show.video.filename %><br>
+                    Size: <%= number_to_human_size(@tv_show.video.byte_size) %>
+                  </p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Video Preview -->
+          <% if @tv_show.video.attached? %>
+            <div class="mb-6">
+              <h3 class="text-lg font-medium text-white mb-3">Preview</h3>
+              <div class="bg-black rounded-lg overflow-hidden">
+                <%= video_tag @tv_show.display_video_url,
+                    controls: true,
+                    class: "w-full",
+                    preload: "metadata" %>
+              </div>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 bg-gray-700 border-t border-gray-600 flex justify-between items-center">
+      <div class="text-sm text-gray-400">
+        Created: <%= @tv_show.created_at.strftime("%B %d, %Y") %><br>
+        Last updated: <%= @tv_show.updated_at.strftime("%B %d, %Y") %>
+      </div>
+
+      <div class="flex space-x-3">
+        <%= link_to "View Public Page", tv_show_path(@tv_show),
+            class: "text-gray-300 hover:text-white border border-gray-600 px-4 py-2 rounded-md" %>
+
+        <%= link_to "Edit TV Show", edit_admin_tv_show_path(@tv_show),
+            class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md" %>
+      </div>
+    </div>
+
+  </div>
+</div>
