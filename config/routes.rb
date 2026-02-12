@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     end
   end
   resources :tv_shows, only: [:index, :show]
-  resources :genres, only: [:show]
+  resources :genres, only: [:index, :show]
   resources :users, only: [:show, :edit, :update]
   
   # Additional routes for user features

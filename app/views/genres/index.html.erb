@@ -1,0 +1,63 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8 text-center">
+    <h1 class="text-4xl font-bold text-white mb-4">Movie Categories</h1>
+    <p class="text-gray-400 max-w-2xl mx-auto">
+      Browse our extensive collection of movies and TV shows organized by genre. 
+      Find exactly what you're looking for, whether it's action, comedy, drama, or something else.
+    </p>
+  </div>
+
+  <!-- Categories Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <% @genres.each do |genre| %>
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl">
+        <%= link_to genre_path(genre), class: "block group" do %>
+          <!-- Genre Header with Gradient -->
+          <div class="relative h-32 bg-gradient-to-br from-red-600 to-purple-700 flex items-center justify-center">
+            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+            <h3 class="text-xl font-bold text-white relative z-10 group-hover:scale-110 transition-transform">
+              <%= genre.name %>
+            </h3>
+          </div>
+          
+          <!-- Genre Stats -->
+          <div class="p-4">
+            <div class="flex justify-between items-center text-sm text-gray-400">
+              <span>
+                <%= genre.movies.count + genre.tv_shows.count %> 
+                <%= 'item'.pluralize(genre.movies.count + genre.tv_shows.count) %>
+              </span>
+              <span class="flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                </svg>
+                Explore
+              </span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Pagination -->
+  <% if @genres.respond_to?(:current_page) %>
+    <div class="mt-12 flex justify-center">
+      <%= paginate @genres, theme: 'tailwind' %>
+    </div>
+  <% end %>
+
+  <!-- Popular Genres Highlight -->
+  <% if @genres.length > 0 %>
+    <div class="mt-16">
+      <h2 class="text-2xl font-bold text-white mb-6 text-center">Popular Categories</h2>
+      <div class="flex flex-wrap justify-center gap-3">
+        <% Genre.joins(:movies).group('genres.id').order('COUNT(movies.id) DESC').limit(8).each do |genre| %>
+          <%= link_to genre.name, genre_path(genre), 
+              class: "px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-full text-sm transition-colors" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

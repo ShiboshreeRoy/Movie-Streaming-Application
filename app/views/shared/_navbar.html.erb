@@ -1,0 +1,166 @@
+<!-- Premium Responsive Navbar -->
+<nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex-shrink-0 flex items-center">
+        <%= link_to root_path, class: "flex items-center space-x-2 group" do %>
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <span class="text-2xl font-bold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">
+            YOMOVIES
+          </span>
+        <% end %>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-center space-x-8">
+          <%= link_to "Movies", movies_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors #{current_page?(movies_path) ? 'text-white bg-gray-800' : ''}" %>
+          <%= link_to "TV Shows", tv_shows_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors #{current_page?(tv_shows_path) ? 'text-white bg-gray-800' : ''}" %>
+          
+          <!-- Genres Dropdown -->
+          <div class="relative group">
+            <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors">
+              Categories
+              <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div class="absolute left-0 mt-2 w-64 bg-gray-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+              <div class="py-2">
+                <% Genre.limit(8).each do |genre| %>
+                  <%= link_to genre.name, genre_path(genre), class: "block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" %>
+                <% end %>
+                <%= link_to "All Categories", genres_path, class: "block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 border-t border-gray-700 mt-2" %>
+              </div>
+            </div>
+          </div>
+          
+          <%= link_to "Search", search_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors #{current_page?(search_path) ? 'text-white bg-gray-800' : ''}" %>
+        </div>
+      </div>
+
+      <!-- User Menu -->
+      <div class="flex items-center space-x-4">
+        <!-- Search Icon (Mobile) -->
+        <button class="md:hidden text-gray-400 hover:text-white p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+
+        <% if user_signed_in? %>
+          <!-- User Dropdown -->
+          <div class="relative group hidden md:block">
+            <button class="flex items-center space-x-2 text-gray-300 hover:text-white focus:outline-none">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white text-sm font-medium">
+                <%= current_user.first_name&.first || current_user.email.first.upcase %>
+              </div>
+              <span class="text-sm hidden lg:inline"><%= current_user.first_name || current_user.email.split('@').first %></span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            
+            <div class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+              <div class="py-2">
+                <%= link_to "Profile", user_path(current_user), class: "block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" %>
+                <% if current_user.admin? %>
+                  <%= link_to "Admin Panel", admin_dashboard_path, class: "block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 transition-colors" %>
+                <% end %>
+                <div class="border-t border-gray-700 my-2"></div>
+                <%= button_to "Logout", destroy_user_session_path, method: :delete, 
+                    data: { confirm: "Are you sure you want to logout?" },
+                    class: "w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors bg-transparent border-none cursor-pointer" %>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mobile User Menu -->
+          <div class="md:hidden">
+            <%= link_to user_path(current_user) do %>
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white text-sm font-medium">
+                <%= current_user.first_name&.first || current_user.email.first.upcase %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <!-- Auth Links -->
+          <div class="hidden md:flex items-center space-x-4">
+            <%= link_to "Login", new_user_session_path, class: "text-gray-300 hover:text-white text-sm font-medium transition-colors" %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
+          </div>
+        <% end %>
+
+        <!-- Mobile menu button -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden hidden bg-gray-800 border-t border-gray-700">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <%= link_to "Movies", movies_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+      <%= link_to "TV Shows", tv_shows_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+      
+      <div class="border-t border-gray-700 my-2"></div>
+      
+      <% Genre.limit(5).each do |genre| %>
+        <%= link_to genre.name, genre_path(genre), class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+      <% end %>
+      
+      <%= link_to "All Categories", genres_path, class: "text-red-400 hover:text-red-300 block px-3 py-2 rounded-md text-base font-medium" %>
+      
+      <div class="border-t border-gray-700 my-2"></div>
+      
+      <%= link_to "Search", search_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+      
+      <% if user_signed_in? %>
+        <div class="border-t border-gray-700 my-2"></div>
+        <%= link_to "Profile", user_path(current_user), class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+        <% if current_user.admin? %>
+          <%= link_to "Admin Panel", admin_dashboard_path, class: "text-red-400 hover:text-red-300 block px-3 py-2 rounded-md text-base font-medium" %>
+        <% end %>
+        <%= button_to "Logout", destroy_user_session_path, method: :delete, 
+            data: { confirm: "Are you sure you want to logout?" },
+            class: "w-full text-left text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium bg-transparent border-none cursor-pointer" %>
+      <% else %>
+        <div class="border-t border-gray-700 my-2"></div>
+        <%= link_to "Login", new_user_session_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "text-red-400 hover:text-red-300 block px-3 py-2 rounded-md text-base font-medium" %>
+      <% end %>
+    </div>
+  </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', function() {
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const isClickInsideMenu = mobileMenu.contains(event.target);
+      const isClickOnButton = mobileMenuButton.contains(event.target);
+      
+      if (!isClickInsideMenu && !isClickOnButton) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+  }
+});
+</script>
