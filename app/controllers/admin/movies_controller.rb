@@ -1,68 +1,81 @@
 class Admin::MoviesController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_admin!
-  
+  before_action :check_admin_role
+  layout 'admin'
+  before_action :set_movie, only: [:show, :edit, :update, :destroy]
+
   def index
-    @movies = Movie.all.page(params[:page]).per(20)
+    @movies = Movie.includes(:genre, :user).all.page(params[:page])
   end
-  
+
   def show
-    @movie = Movie.friendly.find(params[:id])
   end
-  
+
   def new
     @movie = Movie.new
+    @movie.ads.build # Build an empty ad for the form
     @genres = Genre.all
   end
-  
+
+  def edit
+    @movie.ads.build # Build an empty ad for the form
+    @genres = Genre.all
+  end
+
   def create
     @movie = Movie.new(movie_params)
-    @genres = Genre.all
-    
-    if @movie.save
-      redirect_to admin_movie_path(@movie), notice: 'Movie was successfully created.'
-    else
-      render :new
+    @movie.user = current_user
+
+    respond_to do |format|
+      if @movie.save
+        format.html { redirect_to admin_movie_path(@movie), notice: 'Movie was successfully created.' }
+        format.turbo_stream
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream
+      end
     end
   end
-  
-  def edit
-    @movie = Movie.friendly.find(params[:id])
-    @genres = Genre.all
-  end
-  
+
   def update
-    @movie = Movie.friendly.find(params[:id])
-    
-    if @movie.update(movie_params)
-      redirect_to admin_movie_path(@movie), notice: 'Movie was successfully updated.'
-    else
-      @genres = Genre.all
-      render :edit
+    respond_to do |format|
+      if @movie.update(movie_params)
+        format.html { redirect_to admin_movie_path(@movie), notice: 'Movie was successfully updated.' }
+        format.turbo_stream
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream
+      end
     end
   end
-  
+
   def destroy
-    @movie = Movie.friendly.find(params[:id])
     @movie.destroy
-    redirect_to admin_movies_path, notice: 'Movie was successfully deleted.'
+    respond_to do |format|
+      format.html { redirect_to admin_movies_url, notice: 'Movie was successfully destroyed.' }
+      format.turbo_stream { head :ok }
+    end
   end
-  
+
   private
-  
+
+  def set_movie
+    @movie = Movie.friendly.find(params[:id])
+  end
+
   def movie_params
     params.require(:movie).permit(
-      :title, :description, :genre_id, :duration, :release_year, 
-      :imdb_rating, :poster_url, :trailer_url, :country, :director, :cast,
-      :thumbnail, :video,
-      :enable_ads, :ad_frequency, :enable_download, :download_quality, :download_price,
-      ads_attributes: [:title, :url, :duration, :position, :script]
+      :title, :genre_id, :release_year, :duration, :imdb_rating, :country, 
+      :director, :cast, :description, :thumbnail, :video, :poster_url, 
+      :trailer_url, :enable_ads, :ad_frequency, 
+      :enable_download, :download_quality, :download_price,
+      ads_attributes: [:id, :title, :url, :duration, :position, :script, :active, :_destroy]
     )
   end
-  
-  def require_admin!
+
+  def check_admin_role
     unless current_user&.admin?
-      redirect_to root_path, alert: 'Access denied. Admin privileges required.'
+      redirect_to root_path, alert: 'Access denied.'
     end
   end
 end

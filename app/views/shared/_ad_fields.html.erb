@@ -1,0 +1,49 @@
+<div class="bg-gray-600 p-4 rounded-lg">
+  <div class="flex justify-between items-start mb-3">
+    <h5 class="text-md font-medium text-white">Ad Campaign #<span class="ad-number"><%= local_assigns[:index].present? ? index + 1 : 'X' %></span></h5>
+    <div class="flex space-x-2">
+      <button type="button" class="remove-ad-btn text-red-400 hover:text-red-300">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+      <% if local_assigns[:ad] && ad.persisted? %>
+        <button type="button" class="mark-for-destruction-btn text-gray-400 hover:text-gray-300" title="Mark for deletion">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </button>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= form.label :title, "Ad Title", class: "block text-sm font-medium mb-1 text-gray-300" %>
+      <%= form.text_field :title, placeholder: "Ad campaign name", class: "w-full bg-gray-500 text-white rounded px-3 py-2 border border-gray-400 required-if-enabled", data: { required_message: "Ad title is required" } %>
+    </div>
+    
+    <div>
+      <%= form.label :url, "Ad URL", class: "block text-sm font-medium mb-1 text-gray-300" %>
+      <%= form.url_field :url, placeholder: "https://example.com/ad", class: "w-full bg-gray-500 text-white rounded px-3 py-2 border border-gray-400 required-if-enabled", data: { required_message: "Ad URL is required" } %>
+    </div>
+    
+    <div>
+      <%= form.label :duration, "Duration (seconds)", class: "block text-sm font-medium mb-1 text-gray-300" %>
+      <%= form.number_field :duration, min: 5, max: 120, value: form.object.duration || 30, class: "w-full bg-gray-500 text-white rounded px-3 py-2 border border-gray-400" %>
+    </div>
+    
+    <div>
+      <%= form.label :position, "Position", class: "block text-sm font-medium mb-1 text-gray-300" %>
+      <%= form.select :position, options_for_select([['Pre-roll', 'pre'], ['Mid-roll', 'mid'], ['Post-roll', 'post']], form.object.position), {}, { class: "w-full bg-gray-500 text-white rounded px-3 py-2 border border-gray-400" } %>
+    </div>
+  </div>
+  
+  <div class="mt-3">
+    <%= form.label :script, "Ad Script/Code", class: "block text-sm font-medium mb-1 text-gray-300" %>
+    <%= form.text_area :script, rows: 3, placeholder: "Paste your ad script or tracking code here", class: "w-full bg-gray-500 text-white rounded px-3 py-2 font-mono text-sm border border-gray-400" %>
+  </div>
+  
+  <%= form.hidden_field :id if form.object.persisted? %>
+  <%= form.hidden_field :_destroy %>
+</div>

@@ -183,7 +183,8 @@
         
         <!-- Download Button (if enabled) -->
         <% if @movie.enable_download %>
-          <button class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-3 rounded-lg transition-all flex items-center justify-between">
+          <%= link_to download_movie_path(@movie), 
+              class: "w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-3 rounded-lg transition-all flex items-center justify-between" do %>
             <div class="flex items-center gap-3">
               <span class="text-xl">⬇</span>
               <span>Download Movie</span>
@@ -196,7 +197,7 @@
                 <div class="text-xs opacity-80">FREE</div>
               <% end %>
             </div>
-          </button>
+          <% end %>
         <% end %>
       </div>
     </div>

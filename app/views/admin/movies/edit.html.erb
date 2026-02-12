@@ -178,11 +178,18 @@
             <div class="bg-gray-600 p-4 rounded-lg">
               <div class="flex justify-between items-start mb-3">
                 <h5 class="text-md font-medium text-white">Ad Campaign #<%= index + 1 %></h5>
-                <button type="button" class="remove-ad-btn text-red-400 hover:text-red-300">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                  </svg>
-                </button>
+                <div class="flex space-x-2">
+                  <button type="button" class="remove-ad-btn text-red-400 hover:text-red-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                  </button>
+                  <button type="button" class="mark-for-destruction-btn text-gray-400 hover:text-gray-300" title="Mark for deletion">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </button>
+                </div>
               </div>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -361,6 +368,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (form) {
     form.addEventListener('submit', function(e) {
+      // Remove any unprocessed template ads (those with NEW_AD_INDEX)
+      const unprocessedTemplates = form.querySelectorAll('input[name*="NEW_AD_INDEX"]');
+      unprocessedTemplates.forEach(function(templateField) {
+        const container = templateField.closest('.bg-gray-600.p-4.rounded-lg');
+        if (container && container.style.display !== 'none') {
+          container.remove();
+        }
+      });
+      
       // Validate required ad fields if ads are enabled
       const enableAds = document.getElementById('enable-ads-checkbox');
       const adsContainer = document.getElementById('ads-container');
@@ -470,6 +486,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     adCount = ads.length;
   }
+
+  // Handle existing ad removal
+  document.querySelectorAll('.remove-ad-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const adElement = this.closest('[id!="ad-template"]');
+      adElement.remove();
+      updateAdNumbers();
+      showToast('Ad removed successfully', 'success');
+    });
+  });
+
+  // Mark for destruction functionality for existing ads
+  document.querySelectorAll('.mark-for-destruction-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const adElement = this.closest('[id!="ad-template"]');
+      const destroyField = adElement.querySelector('input[type="hidden"][name$="[_destroy]"]');
+      if (destroyField) {
+        destroyField.value = '1';
+        adElement.style.opacity = '0.5';
+        adElement.style.textDecoration = 'line-through';
+        showToast('Ad marked for deletion', 'warning');
+      }
+    });
+  });
 
   // Auto-ads feature
   const enableAdsCheckbox = document.getElementById('enable-ads-checkbox');

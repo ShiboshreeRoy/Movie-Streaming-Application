@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin Panel - Movie Streaming App</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    
+    <style>
+      .admin-sidebar {
+        width: 240px;
+        transition: transform 0.3s ease;
+      }
+      
+      .admin-content {
+        margin-left: 240px;
+        transition: margin 0.3s ease;
+      }
+      
+      @media (max-width: 768px) {
+        .admin-sidebar {
+          position: fixed;
+          height: 100vh;
+          z-index: 1000;
+          transform: translateX(-100%);
+        }
+        
+        .admin-sidebar.open {
+          transform: translateX(0);
+        }
+        
+        .admin-content {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-900 text-white">
+    <!-- Mobile menu button -->
+    <div class="lg:hidden fixed top-4 left-4 z-50">
+      <button id="sidebar-toggle" class="bg-gray-800 p-2 rounded-lg">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Sidebar -->
+    <aside id="admin-sidebar" class="admin-sidebar fixed top-0 left-0 h-full bg-gray-800 z-40 lg:z-auto">
+      <div class="p-6 border-b border-gray-700">
+        <h1 class="text-2xl font-bold text-white">Admin Panel</h1>
+      </div>
+      
+      <nav class="p-4 space-y-2">
+        <%= link_to admin_dashboard_path, class: "#{"bg-gray-700" if current_page?(admin_dashboard_path)} flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors" do %>
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+          </svg>
+          Dashboard
+        <% end %>
+        
+        <%= link_to admin_movies_path, class: "#{"bg-gray-700" if current_page?(admin_movies_path)} flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors" do %>
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h18M3 20h18"></path>
+          </svg>
+          Movies
+        <% end %>
+        
+        <%= link_to admin_tv_shows_path, class: "#{"bg-gray-700" if current_page?(admin_tv_shows_path)} flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors" do %>
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          TV Shows
+        <% end %>
+        
+        <%= link_to admin_genres_path, class: "#{"bg-gray-700" if current_page?(admin_genres_path)} flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors" do %>
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+          </svg>
+          Categories
+        <% end %>
+        
+        <%= link_to admin_ads_path, class: "#{"bg-gray-700" if current_page?(admin_ads_path)} flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors" do %>
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+          Ads
+        <% end %>
+        
+        <%= link_to admin_users_path, class: "#{"bg-gray-700" if current_page?(admin_users_path)} flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors" do %>
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+          </svg>
+          Users
+        <% end %>
+        
+        <%= link_to root_path, class: "flex items-center p-3 rounded-lg hover:bg-gray-700 transition-colors mt-4 border-t border-gray-700" do %>
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Site
+        <% end %>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-content min-h-screen">
+      <!-- Top Navigation -->
+      <nav class="bg-gray-800 border-b border-gray-700 p-4">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center">
+            <h2 class="text-xl font-semibold">
+              <% if content_for?(:page_title) %>
+                <%= yield(:page_title) %>
+              <% else %>
+                <%= controller.controller_name.humanize %>
+              <% end %>
+            </h2>
+          </div>
+          
+          <div class="flex items-center space-x-4">
+            <span class="text-gray-400">Welcome, <%= current_user.email %></span>
+            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "text-red-400 hover:text-red-300" %>
+          </div>
+        </div>
+      </nav>
+      
+      <!-- Page Content -->
+      <div class="p-6">
+        <%= yield %>
+      </div>
+    </main>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('admin-sidebar');
+        const toggleButton = document.getElementById('sidebar-toggle');
+        
+        toggleButton.addEventListener('click', function() {
+          sidebar.classList.toggle('open');
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+          const isClickInsideSidebar = sidebar.contains(event.target);
+          const isClickOnToggle = toggleButton.contains(event.target);
+          
+          if (!isClickInsideSidebar && !isClickOnToggle && window.innerWidth < 768) {
+            sidebar.classList.remove('open');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

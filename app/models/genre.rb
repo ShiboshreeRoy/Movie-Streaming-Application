@@ -6,4 +6,5 @@ class Genre < ApplicationRecord
   has_many :tv_shows, dependent: :nullify
   
   validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :description, length: { maximum: 500 }, allow_blank: true
 end

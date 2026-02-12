@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   
   # Main content routes
   resources :home, only: [:index]
-  resources :movies, only: [:index, :show]
+  resources :movies, only: [:index, :show] do
+    member do
+      get :download
+    end
+  end
   resources :tv_shows, only: [:index, :show]
   resources :genres, only: [:show]
   resources :users, only: [:show, :edit, :update]
@@ -20,12 +24,17 @@ Rails.application.routes.draw do
   
   # Admin namespace
   namespace :admin do
+    root 'admin#dashboard'
+    get 'dashboard', to: 'admin#dashboard'
     resources :movies
     resources :tv_shows
+    resources :genres
+    resources :ads
+    resources :users, only: [:index, :show, :edit, :update, :destroy]
   end
   
   # Admin dashboard
-  get '/admin', to: 'admin#index', as: 'admin'
+  get '/admin', to: 'admin/admin#index', as: 'admin'
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

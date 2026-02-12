@@ -1,0 +1,39 @@
+<div class="bg-gray-800 rounded-lg p-6 max-w-2xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-white">User Details</h1>
+    <div class="flex space-x-3">
+      <%= link_to "Edit", edit_admin_user_path(@user), class: "bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors" %>
+      <%= link_to "Back to Users", admin_users_path, class: "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors" %>
+    </div>
+  </div>
+  
+  <div class="bg-gray-700 rounded-lg p-6 space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <h3 class="text-sm font-medium text-gray-400">Email</h3>
+        <p class="text-white"><%= @user.email %></p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-400">Role</h3>
+        <p class="text-white">
+          <% if @user.admin? %>
+            <span class="bg-red-600 text-white px-2 py-1 rounded text-sm">Admin</span>
+          <% else %>
+            <span class="bg-gray-600 text-white px-2 py-1 rounded text-sm">User</span>
+          <% end %>
+        </p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-400">Account Created</h3>
+        <p class="text-white"><%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-400">Last Sign In</h3>
+        <p class="text-white"><%= @user.last_sign_in_at ? @user.last_sign_in_at.strftime("%B %d, %Y at %I:%M %p") : 'Never' %></p>
+      </div>
+    </div>
+  </div>
+</div>

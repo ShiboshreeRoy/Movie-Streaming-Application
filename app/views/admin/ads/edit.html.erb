@@ -1,0 +1,66 @@
+<div class="bg-gray-800 rounded-lg p-6 max-w-2xl mx-auto">
+  <h1 class="text-3xl font-bold text-white mb-6">Edit Ad</h1>
+  
+  <%= form_with model: [:admin, @ad], local: true, class: "space-y-6" do |form| %>
+    <% if @ad.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <h3 class="font-bold"><%= pluralize(@ad.errors.count, "error") %> prohibited this ad from being saved:</h3>
+        <ul class="list-disc pl-5 mt-2">
+          <% @ad.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= form.label :title, class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= form.text_field :title, class: "w-full bg-gray-600 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 border border-gray-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :url, class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= form.url_field :url, class: "w-full bg-gray-600 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 border border-gray-500", placeholder: "https://example.com" %>
+      </div>
+      
+      <div>
+        <%= form.label :duration, class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= form.number_field :duration, min: 5, max: 120, value: 30, class: "w-full bg-gray-600 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 border border-gray-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :priority, class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= form.number_field :priority, min: 0, max: 100, value: 10, class: "w-full bg-gray-600 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 border border-gray-500" %>
+      </div>
+      
+      <div>
+        <%= form.label :position, class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= form.select :position, options_for_select([['Pre-roll', 'pre'], ['Mid-roll', 'mid'], ['Post-roll', 'post']], @ad.position), { prompt: "Select Position" }, { class: "w-full bg-gray-600 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 border border-gray-500" } %>
+      </div>
+      
+      <div>
+        <%= form.label :placement_zone, class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= form.select :placement_zone, options_for_select(Ad::PLACEMENT_ZONES.map { |k, v| [k.to_s.humanize, k.to_s] }, @ad.placement_zone), { prompt: "Select Placement Zone" }, { class: "w-full bg-gray-600 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 border border-gray-500" } %>
+      </div>
+      
+      <div class="md:col-span-2">
+        <%= form.label :active, class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <div class="flex items-center">
+          <%= form.check_box :active, class: "h-5 w-5 text-red-600 rounded focus:ring-red-500 mr-2" %>
+          <span class="text-gray-300">Make this ad active</span>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+      <%= form.label :script, class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= form.text_area :script, rows: 6, class: "w-full bg-gray-600 text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 border border-gray-500 font-mono text-sm", placeholder: "Paste your ad script or tracking code here" %>
+    </div>
+    
+    <div class="flex justify-end space-x-4 pt-4">
+      <%= link_to "Cancel", admin_ads_path, class: "bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded transition-colors" %>
+      <%= form.submit "Update Ad", class: "bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded transition-colors" %>
+    </div>
+  <% end %>
+</div>

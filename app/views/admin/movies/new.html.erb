@@ -273,6 +273,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (form) {
     form.addEventListener('submit', function(e) {
+      // Remove any unprocessed template ads (those with NEW_AD_INDEX)
+      const unprocessedTemplates = form.querySelectorAll('input[name*="NEW_AD_INDEX"]');
+      unprocessedTemplates.forEach(function(templateField) {
+        const container = templateField.closest('.bg-gray-600.p-4.rounded-lg');
+        if (container && container.style.display !== 'none') {
+          container.remove();
+        }
+      });
+      
       // Validate required ad fields if ads are enabled
       const enableAds = document.getElementById('enable-ads-checkbox');
       const adsContainer = document.getElementById('ads-container');

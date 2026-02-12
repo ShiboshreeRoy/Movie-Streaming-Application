@@ -2,6 +2,7 @@ class TvShow < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: :slugged
   
+  belongs_to :user, optional: true
   belongs_to :genre, optional: true
   
   # Active Storage attachments

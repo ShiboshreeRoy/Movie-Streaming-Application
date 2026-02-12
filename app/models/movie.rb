@@ -2,6 +2,7 @@ class Movie < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: :slugged
   
+  belongs_to :user, optional: true
   belongs_to :genre, optional: true
   has_many :user_movie_ratings, dependent: :destroy
   has_many :user_favorites, dependent: :destroy
@@ -32,6 +33,8 @@ class Movie < ApplicationRecord
   scope :by_rating, ->(min_rating) { where('imdb_rating >= ?', min_rating) }
   scope :recent, -> { order(created_at: :desc) }
   scope :popular, -> { left_joins(:user_favorites).group(:id).order('COUNT(user_favorites.id) DESC') }
+  scope :most_viewed, -> { order(views_count: :desc) }
+  scope :most_downloaded, -> { order(downloads_count: :desc) }
   
   # Override poster_url to use attached thumbnail if available
   def display_poster_url
@@ -49,6 +52,19 @@ class Movie < ApplicationRecord
     else
       trailer_url
     end
+  end
+  
+  # Tracking methods
+  def increment_views!
+    increment!(:views_count)
+  end
+  
+  def increment_downloads!
+    increment!(:downloads_count)
+  end
+  
+  def total_engagement
+    views_count.to_i + downloads_count.to_i
   end
   
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_12_173356) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,8 +46,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.integer "duration"
-    t.bigint "movie_id", null: false
+    t.bigint "movie_id"
+    t.integer "placement_zone"
     t.string "position"
+    t.integer "priority"
     t.text "script"
     t.string "title"
     t.datetime "updated_at", null: false
@@ -68,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
 
   create_table "genres", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.text "description"
     t.string "name"
     t.string "slug"
     t.datetime "updated_at", null: false
@@ -82,6 +85,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
     t.string "director"
     t.decimal "download_price"
     t.string "download_quality"
+    t.integer "downloads_count", default: 0
     t.integer "duration"
     t.boolean "enable_ads"
     t.boolean "enable_download"
@@ -94,6 +98,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
     t.string "title"
     t.string "trailer_url"
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.integer "views_count", default: 0
     t.index ["country"], name: "index_movies_on_country"
     t.index ["genre"], name: "index_movies_on_genre"
     t.index ["genre_id"], name: "index_movies_on_genre_id"
@@ -101,6 +107,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
     t.index ["release_year"], name: "index_movies_on_release_year"
     t.index ["slug"], name: "index_movies_on_slug", unique: true
     t.index ["title"], name: "index_movies_on_title"
+    t.index ["user_id"], name: "index_movies_on_user_id"
   end
 
   create_table "tv_shows", force: :cascade do |t|
@@ -118,6 +125,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
     t.string "title"
     t.string "trailer_url"
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["country"], name: "index_tv_shows_on_country"
     t.index ["genre"], name: "index_tv_shows_on_genre"
     t.index ["genre_id"], name: "index_tv_shows_on_genre_id"
@@ -125,6 +133,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
     t.index ["release_year"], name: "index_tv_shows_on_release_year"
     t.index ["slug"], name: "index_tv_shows_on_slug", unique: true
     t.index ["title"], name: "index_tv_shows_on_title"
+    t.index ["user_id"], name: "index_tv_shows_on_user_id"
   end
 
   create_table "user_favorites", force: :cascade do |t|
@@ -169,7 +178,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_002539) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "ads", "movies"
   add_foreign_key "movies", "genres"
+  add_foreign_key "movies", "users"
   add_foreign_key "tv_shows", "genres"
+  add_foreign_key "tv_shows", "users"
   add_foreign_key "user_favorites", "movies"
   add_foreign_key "user_favorites", "users"
   add_foreign_key "user_movie_ratings", "movies"
