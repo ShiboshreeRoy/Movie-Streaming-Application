@@ -28,7 +28,12 @@ class Admin::MoviesController < ApplicationController
 
     respond_to do |format|
       if @movie.save
-        format.html { redirect_to admin_movie_path(@movie), notice: 'Movie was successfully created.' }
+        format.html { 
+          flash[:notice] = nil # Clear Rails flash since we're using toast
+          redirect_to admin_movie_path(@movie)
+          # Add JavaScript to show toast after redirect
+          flash[:toast] = { type: 'success', message: 'Movie was successfully created.' }
+        }
         format.turbo_stream
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -40,9 +45,14 @@ class Admin::MoviesController < ApplicationController
   def update
     respond_to do |format|
       if @movie.update(movie_params)
-        format.html { redirect_to admin_movie_path(@movie), notice: 'Movie was successfully updated.' }
+        format.html { 
+          flash[:notice] = nil
+          redirect_to admin_movie_path(@movie)
+          flash[:toast] = { type: 'success', message: 'Movie was successfully updated.' }
+        }
         format.turbo_stream
       else
+        @genres = Genre.all  # Add this line to fix the error
         format.html { render :edit, status: :unprocessable_entity }
         format.turbo_stream
       end
@@ -52,7 +62,11 @@ class Admin::MoviesController < ApplicationController
   def destroy
     @movie.destroy
     respond_to do |format|
-      format.html { redirect_to admin_movies_url, notice: 'Movie was successfully destroyed.' }
+      format.html { 
+        flash[:notice] = nil
+        redirect_to admin_movies_url
+        flash[:toast] = { type: 'success', message: 'Movie was successfully deleted.' }
+      }
       format.turbo_stream { head :ok }
     end
   end

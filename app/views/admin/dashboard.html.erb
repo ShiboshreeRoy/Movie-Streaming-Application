@@ -166,6 +166,28 @@
           </div>
         <% end %>
       </div>
+      
+      <!-- Toast Demo Buttons -->
+      <div class="mt-6 p-4 bg-gray-700 rounded-lg">
+        <h3 class="text-white font-medium mb-3">Toast Notification Demos</h3>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="showSuccess('Movie created successfully!')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm">
+            Success Toast
+          </button>
+          <button onclick="showError('Failed to delete movie. Please try again.')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm">
+            Error Toast
+          </button>
+          <button onclick="showWarning('This action cannot be undone.')" class="bg-yellow-600 hover:bg-yellow-700 text-gray-900 px-3 py-2 rounded text-sm">
+            Warning Toast
+          </button>
+          <button onclick="showInfo('New update available. Click to learn more.')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm">
+            Info Toast
+          </button>
+          <button onclick="showToast('Custom positioned toast!', 'info', { position: 'bottom-right', duration: 3000 })" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm">
+            Bottom Right
+          </button>
+        </div>
+      </div>
     </div>
     
     <!-- Top Performing Movies -->

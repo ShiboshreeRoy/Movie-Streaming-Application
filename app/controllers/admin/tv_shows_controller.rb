@@ -38,9 +38,14 @@ class Admin::TvShowsController < ApplicationController
   def update
     respond_to do |format|
       if @tv_show.update(tv_show_params)
-        format.html { redirect_to admin_tv_show_path(@tv_show), notice: 'TV Show was successfully updated.' }
+        format.html { 
+          flash[:notice] = nil
+          redirect_to admin_tv_show_path(@tv_show)
+          flash[:toast] = { type: 'success', message: 'TV Show was successfully updated.' }
+        }
         format.turbo_stream
       else
+        @genres = Genre.all  # Add this line to fix the error
         format.html { render :edit, status: :unprocessable_entity }
         format.turbo_stream
       end

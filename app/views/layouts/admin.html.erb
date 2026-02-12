@@ -21,6 +21,51 @@
         transition: margin 0.3s ease;
       }
       
+      /* Toast Animations */
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes slideInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
       @media (max-width: 768px) {
         .admin-sidebar {
           position: fixed;
@@ -127,7 +172,9 @@
           
           <div class="flex items-center space-x-4">
             <span class="text-gray-400">Welcome, <%= current_user.email %></span>
-            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "text-red-400 hover:text-red-300" %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, 
+                data: { confirm: "Are you sure you want to logout?" },
+                class: "text-red-400 hover:text-red-300 bg-transparent border-none cursor-pointer" %>
           </div>
         </div>
       </nav>
@@ -156,6 +203,22 @@
             sidebar.classList.remove('open');
           }
         });
+        
+        // Handle toast notifications
+        const toastData = <%= raw flash[:toast].to_json || 'null' %>;
+        if (toastData) {
+          setTimeout(() => {
+            showToast(toastData.message, toastData.type, { duration: 4000 });
+          }, 500);
+        }
+        
+        // Also handle Rails flash notices for backward compatibility
+        const railsFlash = <%= raw flash[:notice].to_json || 'null' %>;
+        if (railsFlash) {
+          setTimeout(() => {
+            showInfo(railsFlash, { duration: 4000 });
+          }, 500);
+        }
       });
     </script>
   </body>
