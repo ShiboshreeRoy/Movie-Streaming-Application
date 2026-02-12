@@ -13,8 +13,10 @@ class Movie < ApplicationRecord
   has_one_attached :thumbnail
   has_one_attached :video
   
-  # Accept nested attributes for ads
-  accepts_nested_attributes_for :ads, allow_destroy: true, reject_if: :all_blank
+  # Accept nested attributes for ads - reject if title or url are blank
+  accepts_nested_attributes_for :ads, allow_destroy: true, reject_if: proc { |attributes|
+    attributes['title'].blank? || attributes['url'].blank?
+  }
   
   validates :title, presence: true
   validates :release_year, numericality: { greater_than: 1900, less_than_or_equal_to: Date.current.year + 5 }

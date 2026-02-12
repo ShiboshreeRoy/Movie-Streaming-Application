@@ -1,3 +1,4 @@
+    <!-- Footer -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -82,12 +83,89 @@
       <%= yield %>
     </main>
     
-    <!-- Footer -->
     <footer class="bg-gray-800 py-8 mt-10">
       <div class="container mx-auto px-4 text-center">
         <p>&copy; 2026 YOMOVIES Clone. All rights reserved.</p>
         <p class="mt-2 text-gray-400">Watch the latest movies and TV shows online for free.</p>
       </div>
     </footer>
+    
+    <!-- Toast Notifications JavaScript -->
+    <script>
+      // Function to show toast notifications
+      function showToast(message, type = 'success') {
+        const toastContainer = document.getElementById('toast-container');
+        
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast bg-${type === 'error' ? 'red' : type === 'warning' ? 'yellow' : 'green'}-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center max-w-md transform transition-transform duration-300 translate-x-full`;
+        toast.style.zIndex = '9999';
+        
+        // Icon based on type
+        const icon = document.createElement('div');
+        icon.className = 'mr-3';
+        if (type === 'error') {
+          icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+        } else if (type === 'warning') {
+          icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+        } else {
+          icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+        }
+        
+        // Message container
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'flex-1';
+        messageDiv.textContent = message;
+        
+        // Close button
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'ml-4 text-white hover:text-gray-200 focus:outline-none';
+        closeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>';
+        
+        closeBtn.onclick = () => {
+          toast.classList.add('translate-x-full');
+          setTimeout(() => {
+            toast.remove();
+          }, 300);
+        };
+        
+        // Assemble toast
+        toast.appendChild(icon);
+        toast.appendChild(messageDiv);
+        toast.appendChild(closeBtn);
+        
+        // Add to container
+        toastContainer.appendChild(toast);
+        
+        // Animate in
+        setTimeout(() => {
+          toast.classList.remove('translate-x-full');
+          toast.classList.add('translate-x-0');
+        }, 100);
+        
+        // Auto remove after delay
+        setTimeout(() => {
+          toast.classList.add('translate-x-full');
+          setTimeout(() => {
+            toast.remove();
+          }, 300);
+        }, 5000);
+      }
+      
+      // Convert Rails flash messages to toasts
+      document.addEventListener('DOMContentLoaded', function() {
+        <% if notice %>
+          showToast('<%= j notice %>', 'success');
+        <% end %>
+        <% if alert %>
+          showToast('<%= j alert %>', 'error');
+        <% end %>
+      });
+      
+      // Listen for custom events to show toasts
+      document.addEventListener('toast:show', function(e) {
+        showToast(e.detail.message, e.detail.type || 'success');
+      });
+    </script>
   </body>
 </html>
