@@ -104,8 +104,8 @@ A comprehensive movie, TV show, and web series streaming platform built with Rub
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
-   cd movie_streaming_app
+   git clone  https://github.com/ShiboshreeRoy/Movie-Streaming-Application.git
+   cd Movie-Streaming-Application
    ```
 
 2. **Install dependencies**:
