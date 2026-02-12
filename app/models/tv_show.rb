@@ -4,6 +4,7 @@ class TvShow < ApplicationRecord
   
   belongs_to :user, optional: true
   belongs_to :genre, optional: true
+  has_many :ads, as: :advertisable, dependent: :destroy
   
   # Active Storage attachments
   has_one_attached :thumbnail

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_12_174229) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_12_182949) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -44,9 +44,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_174229) do
 
   create_table "ads", force: :cascade do |t|
     t.boolean "active"
+    t.integer "advertisable_id"
+    t.string "advertisable_type"
     t.datetime "created_at", null: false
     t.integer "duration"
-    t.bigint "movie_id"
     t.integer "placement_zone"
     t.string "position"
     t.integer "priority"
@@ -54,7 +55,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_174229) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.string "url"
-    t.index ["movie_id"], name: "index_ads_on_movie_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -179,9 +179,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_12_174229) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "web_series", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.decimal "download_price", precision: 8, scale: 2, default: "0.0"
+    t.string "download_quality", default: "hd"
+    t.integer "downloads_count", default: 0
+    t.integer "duration"
+    t.boolean "enable_download", default: true
+    t.integer "episode_number", default: 1
+    t.bigint "genre_id"
+    t.string "poster_url"
+    t.date "release_date"
+    t.integer "season_number", default: 1
+    t.string "slug"
+    t.string "title", null: false
+    t.string "trailer_url"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.integer "views_count", default: 0
+    t.index ["episode_number"], name: "index_web_series_on_episode_number"
+    t.index ["genre_id"], name: "index_web_series_on_genre_id"
+    t.index ["release_date"], name: "index_web_series_on_release_date"
+    t.index ["season_number"], name: "index_web_series_on_season_number"
+    t.index ["slug"], name: "index_web_series_on_slug", unique: true
+    t.index ["user_id"], name: "index_web_series_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "ads", "movies"
   add_foreign_key "movies", "genres"
   add_foreign_key "movies", "users"
   add_foreign_key "tv_shows", "genres"

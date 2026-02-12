@@ -1,0 +1,145 @@
+<div class="bg-gray-800 rounded-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Web Series Details</h1>
+    <div class="space-x-3">
+      <%= link_to "Edit", edit_admin_web_series_path(@web_series), class: "bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded" %>
+      <%= link_to "Back to List", admin_web_series_index_path, class: "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded" %>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Basic Information -->
+    <div class="bg-gray-700 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-white mb-4">Basic Information</h2>
+      
+      <div class="space-y-3">
+        <div>
+          <span class="text-gray-400">Title:</span>
+          <span class="text-white ml-2"><%= @web_series.title %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Season/Episode:</span>
+          <span class="text-white ml-2">S<%= @web_series.season_number %> E<%= @web_series.episode_number %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Genre:</span>
+          <span class="text-white ml-2"><%= @web_series.genre&.name || 'N/A' %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Release Date:</span>
+          <span class="text-white ml-2"><%= @web_series.release_date&.strftime('%Y-%m-%d') || 'N/A' %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Duration:</span>
+          <span class="text-white ml-2"><%= @web_series.duration || 'N/A' %> minutes</span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Description:</span>
+          <p class="text-white ml-2 mt-1"><%= simple_format(@web_series.description) %></p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Media Information -->
+    <div class="bg-gray-700 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-white mb-4">Media Information</h2>
+      
+      <div class="space-y-3">
+        <div>
+          <span class="text-gray-400">Thumbnail:</span>
+          <div class="mt-2">
+            <% if @web_series.thumbnail.attached? %>
+              <div class="bg-gray-600 rounded p-2">
+                <img src="<%= rails_blob_path(@web_series.thumbnail, only_path: true) %>" alt="Thumbnail" class="max-w-full h-32 object-contain">
+              </div>
+            <% else %>
+              <span class="text-yellow-400">No thumbnail uploaded</span>
+            <% end %>
+          </div>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Video:</span>
+          <div class="mt-2">
+            <% if @web_series.video.attached? %>
+              <span class="text-green-400">Video uploaded</span>
+            <% else %>
+              <span class="text-yellow-400">No video uploaded</span>
+            <% end %>
+          </div>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Poster URL:</span>
+          <span class="text-white ml-2"><%= @web_series.poster_url || 'N/A' %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Trailer URL:</span>
+          <span class="text-white ml-2"><%= @web_series.trailer_url || 'N/A' %></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Statistics -->
+    <div class="bg-gray-700 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-white mb-4">Statistics</h2>
+      
+      <div class="space-y-3">
+        <div>
+          <span class="text-gray-400">Views Count:</span>
+          <span class="text-white ml-2"><%= @web_series.views_count || 0 %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Downloads Count:</span>
+          <span class="text-white ml-2"><%= @web_series.downloads_count || 0 %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Total Engagement:</span>
+          <span class="text-white ml-2"><%= @web_series.total_engagement %></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Download Settings -->
+    <div class="bg-gray-700 rounded-lg p-6">
+      <h2 class="text-xl font-semibold text-white mb-4">Download Settings</h2>
+      
+      <div class="space-y-3">
+        <div>
+          <span class="text-gray-400">Download Enabled:</span>
+          <span class="text-white ml-2"><%= @web_series.enable_download ? 'Yes' : 'No' %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Download Quality:</span>
+          <span class="text-white ml-2"><%= @web_series.download_quality || 'N/A' %></span>
+        </div>
+        
+        <div>
+          <span class="text-gray-400">Download Price:</span>
+          <span class="text-white ml-2">$<%= @web_series.download_price || 0 %></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Actions -->
+    <div class="bg-gray-700 rounded-lg p-6 col-span-2">
+      <h2 class="text-xl font-semibold text-white mb-4">Actions</h2>
+      
+      <div class="flex flex-wrap gap-4">
+        <%= link_to "View on Site", web_series_path(@web_series), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" %>
+        <%= link_to "Edit", edit_admin_web_series_path(@web_series), class: "bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded" %>
+        <%= link_to "Delete", admin_web_series_path(@web_series), method: :delete, 
+                    confirm: 'Are you sure?', class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded" %>
+      </div>
+    </div>
+  </div>
+</div>

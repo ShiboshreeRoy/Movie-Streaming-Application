@@ -21,6 +21,7 @@
         <div class="ml-10 flex items-center space-x-8">
           <%= link_to "Movies", movies_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors #{current_page?(movies_path) ? 'text-white bg-gray-800' : ''}" %>
           <%= link_to "TV Shows", tv_shows_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors #{current_page?(tv_shows_path) ? 'text-white bg-gray-800' : ''}" %>
+          <%= link_to "Web Series", web_series_index_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors #{current_page?(web_series_index_path) ? 'text-white bg-gray-800' : ''}" %>
           
           <!-- Genres Dropdown -->
           <div class="relative group">
@@ -111,6 +112,7 @@
     <div class="px-2 pt-2 pb-3 space-y-1">
       <%= link_to "Movies", movies_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
       <%= link_to "TV Shows", tv_shows_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+      <%= link_to "Web Series", web_series_index_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
       
       <div class="border-t border-gray-700 my-2"></div>
       

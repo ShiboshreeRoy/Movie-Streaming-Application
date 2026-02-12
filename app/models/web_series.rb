@@ -1,26 +1,23 @@
-class Movie < ApplicationRecord
+class WebSeries < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: :slugged
   
   belongs_to :user, optional: true
   belongs_to :genre, optional: true
-  has_many :user_movie_ratings, dependent: :destroy
-  has_many :user_favorites, dependent: :destroy
   has_many :ads, as: :advertisable, dependent: :destroy
-  has_many :rated_users, through: :user_movie_ratings, source: :user
-  has_many :favorited_users, through: :user_favorites, source: :user
   
   # Active Storage attachments
   has_one_attached :thumbnail
   has_one_attached :video
   
-  # Accept nested attributes for ads - reject if title or url are blank
+  # Accept nested attributes for ads
   accepts_nested_attributes_for :ads, allow_destroy: true, reject_if: proc { |attributes|
     attributes['title'].blank? || attributes['url'].blank?
   }
   
   validates :title, presence: true
-  validates :release_year, numericality: { greater_than: 1900, less_than_or_equal_to: Date.current.year + 5 }
+  validates :season_number, numericality: { greater_than: 0 }
+  validates :episode_number, numericality: { greater_than: 0 }
   
   # Custom validations for content types and sizes
   validate :validate_thumbnail_content_type
@@ -28,13 +25,11 @@ class Movie < ApplicationRecord
   validate :validate_thumbnail_size
   validate :validate_video_size
   
+  scope :by_season, ->(season) { where(season_number: season) }
+  scope :by_episode, ->(episode) { where(episode_number: episode) }
   scope :by_genre, ->(genre_id) { where(genre_id: genre_id) }
-  scope :by_year, ->(year) { where(release_year: year) }
-  scope :by_rating, ->(min_rating) { where('imdb_rating >= ?', min_rating) }
-  scope :recent, -> { order(created_at: :desc) }
-  scope :popular, -> { left_joins(:user_favorites).group(:id).order('COUNT(user_favorites.id) DESC') }
-  scope :most_viewed, -> { order(views_count: :desc) }
-  scope :most_downloaded, -> { order(downloads_count: :desc) }
+  scope :recent, -> { order(release_date: :desc, created_at: :desc) }
+  scope :popular, -> { order(views_count: :desc) }
   
   # Override poster_url to use attached thumbnail if available
   def display_poster_url
@@ -88,8 +83,8 @@ class Movie < ApplicationRecord
   end
   
   def validate_video_size
-    if video.attached? && video.blob.byte_size > 100.megabytes
-      errors.add(:video, 'must be less than 100MB')
+    if video.attached? && video.blob.byte_size > 500.megabytes
+      errors.add(:video, 'must be less than 500MB')
     end
   end
 end

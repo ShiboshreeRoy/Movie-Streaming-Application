@@ -1,0 +1,86 @@
+<div class="bg-gray-800 rounded-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Admin - Web Series</h1>
+    <%= link_to "Add New Episode", new_admin_web_series_path, class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded" %>
+  </div>
+  
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-gray-700 rounded-lg">
+      <thead>
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Title</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Season/Ep</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Genre</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Release Date</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Views</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Downloads</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Thumbnail</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Video</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-600">
+        <% @web_series.each do |series| %>
+          <tr class="hover:bg-gray-600">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-white"><%= series.title %></div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-300">
+                <span class="px-2 py-1 bg-purple-600 text-white rounded-full text-xs">
+                  S<%= series.season_number %> E<%= series.episode_number %>
+                </span>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-300"><%= series.genre&.name || 'N/A' %></div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-300"><%= series.release_date&.strftime('%Y-%m-%d') || 'N/A' %></div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-300">
+                <span class="px-2 py-1 bg-blue-600 text-white rounded-full text-xs">
+                  <%= series.views_count || 0 %>
+                </span>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-300">
+                <span class="px-2 py-1 bg-green-600 text-white rounded-full text-xs">
+                  <%= series.downloads_count || 0 %>
+                </span>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <% if series.thumbnail.attached? %>
+                <span class="px-2 py-1 text-xs bg-green-600 text-white rounded-full">Uploaded</span>
+              <% else %>
+                <span class="px-2 py-1 text-xs bg-yellow-600 text-white rounded-full">Missing</span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <% if series.video.attached? %>
+                <span class="px-2 py-1 text-xs bg-green-600 text-white rounded-full">Uploaded</span>
+              <% else %>
+                <span class="px-2 py-1 text-xs bg-yellow-600 text-white rounded-full">Missing</span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <%= link_to "View", web_series_path(series), class: "text-blue-400 hover:text-blue-300 mr-3" %>
+              <%= link_to "Edit", edit_admin_web_series_path(series), class: "text-yellow-400 hover:text-yellow-300 mr-3" %>
+              <%= link_to "Delete", admin_web_series_path(series), method: :delete, 
+                          confirm: 'Are you sure?', class: "text-red-400 hover:text-red-300" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <% if @web_series.respond_to?(:current_page) %>
+    <div class="mt-6">
+      <%= paginate @web_series %>
+    </div>
+  <% end %>
+</div>

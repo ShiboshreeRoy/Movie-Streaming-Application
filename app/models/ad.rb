@@ -1,5 +1,5 @@
 class Ad < ApplicationRecord
-  belongs_to :movie, optional: true
+  belongs_to :advertisable, polymorphic: true
   
   # Additional fields for site-wide ads
   # Using constants instead of enum for placement_zone due to compatibility issues

@@ -13,10 +13,12 @@ class Admin::TvShowsController < ApplicationController
 
   def new
     @tv_show = TvShow.new
+    @tv_show.ads.build # Build an empty ad for the form
     @genres = Genre.all
   end
 
   def edit
+    @tv_show.ads.build # Build an empty ad for the form
     @genres = Genre.all
   end
 
@@ -68,10 +70,10 @@ class Admin::TvShowsController < ApplicationController
 
   def tv_show_params
     params.require(:tv_show).permit(
-      :title, :genre_id, :release_year, :seasons, :episodes, :imdb_rating, 
-      :country, :creator, :cast, :description, :thumbnail, :poster_url, 
-      :trailer_url, :enable_ads, :ad_frequency, :enable_download, 
-      :download_quality, :download_price
+      :title, :genre_id, :release_year, :seasons_count, :episodes_per_season, :duration,
+      :imdb_rating, :country, :director, :cast, :description, :thumbnail, :video, :poster_url, :trailer_url,
+      :enable_ads, :ad_frequency, :enable_download, :download_quality, :download_price,
+      ads_attributes: [:id, :title, :url, :duration, :position, :script, :active, :_destroy]
     )
   end
 
